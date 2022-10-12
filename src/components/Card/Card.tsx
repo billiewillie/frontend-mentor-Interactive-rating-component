@@ -3,33 +3,23 @@ import styles from "./Form.module.css";
 
 interface CardProps {
 	amount: number;
-	submitHandler: (el: number) => void;
+	selected: number | null;
+	submitHandler: () => void;
+	toggleRanking: (el: number) => void;
 }
 
-const Card = ({ amount, submitHandler }: CardProps) => {
-	const [activeEl, setActiveEl] = useState<number | null>(null);
-
-	const elementHandler = (i: number): void => {
-		setActiveEl(i);
-		submitHandler(i);
-	};
-
+const Card = ({ amount, selected, submitHandler, toggleRanking }: CardProps) => {
 	const renderInputs = (): JSX.Element[] => {
 		let arr = [];
 		for (let i = 1; i <= amount; i++) {
 			arr.push(
-				<div
-					className={i === activeEl ? [styles.Ranking__el, styles.Active].join(" ") : styles.Ranking__el}
-					key={i}
-					onClick={() => elementHandler(i)}>
+				<div className={i === selected ? [styles.Ranking__el, styles.Active].join(" ") : styles.Ranking__el} key={i} onClick={() => toggleRanking(i)}>
 					{i}
 				</div>
 			);
 		}
 		return arr;
 	};
-
-	console.log(activeEl);
 
 	return (
 		<div className='card'>
@@ -38,13 +28,9 @@ const Card = ({ amount, submitHandler }: CardProps) => {
 			<p className='text'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, tenetur.</p>
 			<div className={styles.Form}>
 				<div className={styles.Ranking}>{renderInputs()}</div>
-				{typeof activeEl === "number" ? (
-					<button className='button' onClick={() => submitHandler(activeEl)}>
-						Submit
-					</button>
-				) : (
-					""
-				)}
+				<button className='button' onClick={submitHandler}>
+					Submit
+				</button>
 			</div>
 		</div>
 	);
